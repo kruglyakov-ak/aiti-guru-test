@@ -5,6 +5,8 @@ export interface Product {
   brand: string;
   sku: string;
   rating: number;
+  thumbnail?: string;
+  category?: string;
 }
 
 export type SortField = keyof Product;

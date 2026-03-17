@@ -6,7 +6,7 @@ export const useProductParams = () => {
 
   const search = searchParams.get("search") ?? "";
   const page = Number(searchParams.get("page")) || 1;
-  const limit = Number(searchParams.get("limit")) || 5;
+  const limit = Number(searchParams.get("limit")) || 20;
   const sortBy = (searchParams.get("sortBy") ?? "title") as SortField;
   const sortDir = (searchParams.get("sortDir") ?? "asc") as SortDirection;
 
