@@ -17,7 +17,6 @@ import {
   CardContent,
   CardHeader,
   CardTitle,
-  CardFooter,
   CardDescription,
 } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
@@ -70,14 +69,14 @@ export const LoginForm = () => {
             <CardTitle className="text-[#232323] text-center text-[32px] sm:text-[40px] font-semibold leading-[110%] tracking-[0.6px]">
               Добро пожаловать!
             </CardTitle>
-            <CardDescription className="text-[#E0E0E0] text-center text-[18px] font-medium leading-[150%]">
+            <CardDescription className="text-[#C9C9C9] text-center text-[18px] font-medium leading-[150%]">
               Пожалуйста, авторизируйтесь
             </CardDescription>
           </CardHeader>
 
           <CardContent className="flex flex-col gap-5 w-full px-2">
             <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
-              <FieldGroup className="flex flex-col gap-4 w-full">
+              <FieldGroup className="flex flex-col gap-3 w-full">
                 {/* Username */}
                 <Controller
                   name="username"
@@ -142,20 +141,39 @@ export const LoginForm = () => {
                   name="remember"
                   control={form.control}
                   render={({ field }) => (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-2.5 pt-1">
                       <Checkbox
                         checked={field.value}
                         onCheckedChange={field.onChange}
                         disabled={isLoading}
                         id="remember"
-                        className="cursor-pointer"
+                        className="cursor-pointer w-6 h-6 border-2 rounded-lg border-[#C9C9C9]"
                       />
-                      <Label htmlFor="remember" className="select-none">
-                        Запомнить меня
+                      <Label
+                        htmlFor="remember"
+                        className="text-[#C9C9C9] text-[16px] font-medium leading-[150%]"
+                      >
+                        Запомнить данные
                       </Label>
                     </div>
                   )}
                 />
+
+                {/* Login button */}
+                <Button
+                  type="submit"
+                  form="login-form"
+                  disabled={isLoading}
+                  className="w-full flex items-center justify-center px-2 py-4 rounded-[12px] border border-[#367AFF] text-white text-[18px] font-semibold leading-[120%] tracking-[-0.18px] transition-opacity hover:opacity-90 active:opacity-80 h-13.5 mt-2"
+                  style={{
+                    background:
+                      "linear-gradient(0deg, rgba(255,255,255,0.00) 0%, rgba(255,255,255,0.12) 100%), #242EDB",
+                    boxShadow:
+                      "0 8px 8px 0 rgba(54,122,255,0.03), 0 -2px 0 1px rgba(0,0,0,0.08) inset",
+                  }}
+                >
+                  {isLoading ? "Вход..." : "Войти"}
+                </Button>
 
                 {/* Root error */}
                 {form.formState.errors.root && (
@@ -165,18 +183,27 @@ export const LoginForm = () => {
                 )}
               </FieldGroup>
             </form>
-          </CardContent>
 
-          <CardFooter>
-            <Button
-              type="submit"
-              form="login-form"
-              disabled={isLoading}
-              className="w-full"
-            >
-              {isLoading ? "Вход..." : "Войти"}
-            </Button>
-          </CardFooter>
+            {/* Or divider */}
+            <div className="flex items-center gap-3 w-full">
+              <div className="flex-1 h-px bg-[#EDEDED]" />
+              <span className="text-[#C9C9C9] text-[16px] font-medium leading-[150%]">
+                или
+              </span>
+              <div className="flex-1 h-px bg-[#EDEDED]" />
+            </div>
+
+            {/* No account link */}
+            <p className="text-center text-[18px] leading-[150%]">
+              <span className="text-[#6C6C6C] font-normal">Нет аккаунта? </span>
+              <a
+                href="#"
+                className="text-[#242EDB] font-semibold underline hover:opacity-80 transition-opacity"
+              >
+                Создать
+              </a>
+            </p>
+          </CardContent>
         </Card>
       </div>
     </div>

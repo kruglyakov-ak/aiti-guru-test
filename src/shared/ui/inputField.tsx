@@ -41,7 +41,7 @@ function InputField({
   return (
     <div
       className={cn(
-        "flex items-center px-4 py-3.5 rounded-[12px] border-[1.5px] border-[#EDEDED] bg-white",
+        "flex items-center px-4 py-3.5 rounded-[12px] border-2 border-[#EDEDED] bg-white",
         className,
       )}
     >
