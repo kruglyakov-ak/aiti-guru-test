@@ -1,6 +1,6 @@
 import { LoginForm } from '@/features/auth/ui/LoginForm';
 import { Navigate } from 'react-router';
-import { useAppSelector } from '@/app/store/hooks';
+import { useAppSelector } from '@/shared/store/hooks';
 import { selectToken } from '@/features/auth/model/authSlice';
 
 export const LoginPage = () => {

@@ -6,7 +6,7 @@ import { useNavigate } from "react-router";
 
 import { loginSchema, type LoginFormValues } from "../lib/schemas";
 import { useLoginMutation } from "../api/authApi";
-import { useAppDispatch } from "@/app/store/hooks";
+import { useAppDispatch } from "@/shared/store/hooks";
 import { setToken } from "@/features/auth/model/authSlice";
 import { getErrorMessage } from "@/shared/lib/errors/getErrorMessage";
 

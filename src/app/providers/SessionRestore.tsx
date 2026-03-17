@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { useAppDispatch } from '../store/hooks';
+import { useAppDispatch } from '../../shared/store/hooks';
 import { setToken } from '@/features/auth/model/authSlice';
 
 export const SessionRestore = ({ children }: { children: React.ReactNode }) => {
