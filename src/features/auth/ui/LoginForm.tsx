@@ -19,10 +19,10 @@ import {
   CardDescription,
 } from "@/shared/ui/card";
 import { Button } from "@/shared/ui/button";
-import { Input } from "@/shared/ui/input";
 import { Field, FieldLabel, FieldError, FieldGroup } from "@/shared/ui/field";
 import { Checkbox } from "@/shared/ui/checkbox";
 import { Label } from "@/shared/ui/label";
+import { InputField } from "@/shared/ui/inputField";
 
 export const LoginForm = () => {
   const [loginMutation, { isLoading }] = useLoginMutation();
@@ -59,17 +59,19 @@ export const LoginForm = () => {
   return (
     <div className="w-full sm:max-w-131.75 rounded-[40px] p-1.5 bg-white">
       <div className="w-full rounded-[34px] p-px bg-[linear-gradient(180deg,rgba(237,237,237,1)_20%,rgba(237,237,237,0)_100%)]">
-        <Card className="w-full rounded-[33px] p-12 p-b-12 gap-8 flex flex-col items-center bg-[linear-gradient(180deg,rgba(35,35,35,0.03)_0%,rgba(35,35,35,0)_50%)] ring-0">
+        <Card className="w-full rounded-[33px] p-12 p-b-12 gap-7 flex flex-col items-center bg-[linear-gradient(180deg,rgba(35,35,35,0.03)_0%,rgba(35,35,35,0)_50%)] ring-0">
           <div className="w-13 h-13 rounded-fullw-[52px] shadow-[0_0_0_2px_#FFFFFF,0_12px_8px_rgba(0,0,0,0.03)] rounded-full ">
-                <LogoIcon />
+            <LogoIcon />
           </div>
 
-
-          <CardHeader className="w-full flex flex-col items-center">
-            <CardTitle className="text-[40px] font-600 leading-[110%] tracking-[-0.015em]">Добро пожаловать!</CardTitle>
-            <CardDescription className="text-[18px] font-500 leading-[150%] color-[#E0E0E0] pt-3">Пожалуйста, авторизируйтесь</CardDescription>
+          <CardHeader className="w-full flex flex-col items-center gap-3">
+            <CardTitle className="text-[42px] font-600 leading-[110%]">
+              Добро пожаловать!
+            </CardTitle>
+            <CardDescription className="text-[18px] font-500 leading-[150%] color-[#E0E0E0]">
+              Пожалуйста, авторизируйтесь
+            </CardDescription>
           </CardHeader>
-
 
           <CardContent className="w-full">
             <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
@@ -80,10 +82,13 @@ export const LoginForm = () => {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="username">
+                      <FieldLabel
+                        className="text-[15px] font-500 leading-[150%]"
+                        htmlFor="username"
+                      >
                         Логин
                       </FieldLabel>
-                      <Input
+                      <InputField
                         {...field}
                         id="username"
                         placeholder="Введите логин"
@@ -103,8 +108,13 @@ export const LoginForm = () => {
                   control={form.control}
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
-                      <FieldLabel htmlFor="password">Пароль</FieldLabel>
-                      <Input
+                      <FieldLabel
+                        className="text-[15px] font-500 leading-[150%]"
+                        htmlFor="password"
+                      >
+                        Пароль
+                      </FieldLabel>
+                      <InputField
                         {...field}
                         type="password"
                         id="password"
