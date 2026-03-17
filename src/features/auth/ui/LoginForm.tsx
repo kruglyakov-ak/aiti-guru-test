@@ -9,6 +9,8 @@ import { useAppDispatch } from "@/shared/store/hooks";
 import { setToken } from "@/features/auth/model/authSlice";
 import { getErrorMessage } from "@/shared/lib/errors/getErrorMessage";
 import LogoIcon from "@/shared/assets/images/logo.svg?react";
+import LockIcon from "@/shared/assets/images/lock.svg?react";
+import UserIcon from "@/shared/assets/images/user.svg?react";
 
 import {
   Card,
@@ -65,25 +67,28 @@ export const LoginForm = () => {
           </div>
 
           <CardHeader className="w-full flex flex-col items-center gap-3">
-            <CardTitle className="text-[42px] font-600 leading-[110%]">
+            <CardTitle className="text-[#232323] text-center text-[32px] sm:text-[40px] font-semibold leading-[110%] tracking-[0.6px]">
               Добро пожаловать!
             </CardTitle>
-            <CardDescription className="text-[18px] font-500 leading-[150%] color-[#E0E0E0]">
+            <CardDescription className="text-[#E0E0E0] text-center text-[18px] font-medium leading-[150%]">
               Пожалуйста, авторизируйтесь
             </CardDescription>
           </CardHeader>
 
-          <CardContent className="w-full">
+          <CardContent className="flex flex-col gap-5 w-full px-2">
             <form id="login-form" onSubmit={form.handleSubmit(onSubmit)}>
-              <FieldGroup>
+              <FieldGroup className="flex flex-col gap-4 w-full">
                 {/* Username */}
                 <Controller
                   name="username"
                   control={form.control}
                   render={({ field, fieldState }) => (
-                    <Field data-invalid={fieldState.invalid}>
+                    <Field
+                      data-invalid={fieldState.invalid}
+                      className="flex flex-col gap-1.5"
+                    >
                       <FieldLabel
-                        className="text-[15px] font-500 leading-[150%]"
+                        className="text-[#232323] text-[18px] font-medium leading-[150%] tracking-[-0.27px]"
                         htmlFor="username"
                       >
                         Логин
@@ -94,6 +99,8 @@ export const LoginForm = () => {
                         placeholder="Введите логин"
                         disabled={isLoading}
                         autoComplete="username"
+                        clearable
+                        leftIcon={<UserIcon />}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
@@ -109,7 +116,7 @@ export const LoginForm = () => {
                   render={({ field, fieldState }) => (
                     <Field data-invalid={fieldState.invalid}>
                       <FieldLabel
-                        className="text-[15px] font-500 leading-[150%]"
+                        className="text-[18px] font-500 leading-[150%]"
                         htmlFor="password"
                       >
                         Пароль
@@ -121,6 +128,7 @@ export const LoginForm = () => {
                         placeholder="Введите пароль"
                         disabled={isLoading}
                         autoComplete="current-password"
+                        leftIcon={<LockIcon />}
                       />
                       {fieldState.invalid && (
                         <FieldError errors={[fieldState.error]} />
