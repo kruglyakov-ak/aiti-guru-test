@@ -1,54 +1,62 @@
-import { useState } from 'react';
-import { useGetProductsQuery } from '../api/productsApi';
-import { useProductParams } from '@/shared/hooks/useProductParams';
-import { useAppSelector } from '@/entities/store/hooks';
-import type { RootState } from '@/entities/store';
-import { sortProducts } from '../lib/sorting';
-import { ProductsTable } from './ProductsTable';
-import { ProductSearch } from './ProductSearch';
-import { Pagination } from './Pagination';
-import { AddProductForm } from './AddProductForm';
-import { Button } from '@/shared/ui/button';
-import { RefreshCw, Plus } from 'lucide-react';
-import type { SortField } from '@/shared/types/product';
+import { useEffect, useState } from "react";
+import { useGetProductsQuery } from "../api/productsApi";
+import { useProductParams } from "@/shared/hooks/useProductParams";
+import { sortProducts } from "../lib/sorting";
+import { ProductsTable } from "./ProductsTable";
+import { ProductSearch } from "./ProductSearch";
+import { Pagination } from "./Pagination";
+import { AddProductForm } from "./AddProductForm";
+import { Button } from "@/shared/ui/button";
+import { RefreshCw, Plus } from "lucide-react";
+import type { SortField } from "@/shared/types/product";
 
 export const ProductsPageContent = () => {
-  const { search, page, limit, sortBy, sortDir, setParams } = useProductParams();
-  const { data, isLoading, error, refetch } = useGetProductsQuery({ search, page, limit });
-  const localProducts = useAppSelector((state: RootState) => state.localProducts.items);
+  const { search, page, limit, sortBy, sortDir, setParams } =
+    useProductParams();
+  const { data, isLoading, error, refetch } = useGetProductsQuery({
+    search,
+    page,
+    limit,
+  });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
 
-  const serverProducts = data?.products ?? [];
-  const combinedProducts = [...localProducts, ...serverProducts];
-  const sortedProducts = sortProducts(combinedProducts, sortBy, sortDir);
+  const products = data?.products ?? [];
+  const sortedProducts = sortProducts(products, sortBy, sortDir);
 
-  const total = (data?.total ?? 0) + localProducts.length;
-  const totalPages = Math.ceil(total / limit);
-  const start = (page - 1) * limit + 1;
+  const total = data?.total ?? 0;
+  const totalPages = Math.ceil(total / limit) || 1;
+  const start = total === 0 ? 0 : (page - 1) * limit + 1;
   const end = Math.min(page * limit, total);
+
+  useEffect(() => {
+    if (page > totalPages && totalPages > 0) {
+      setParams({ page: totalPages });
+    }
+  }, [page, setParams, totalPages]);
 
   const handleSort = (field: SortField) => {
     if (sortBy === field) {
-      setParams({ sortDir: sortDir === 'asc' ? 'desc' : 'asc' });
+      setParams({ sortDir: sortDir === "asc" ? "desc" : "asc" });
     } else {
-      setParams({ sortBy: field, sortDir: 'asc' });
+      setParams({ sortBy: field, sortDir: "asc" });
     }
   };
 
   const handlePageChange = (newPage: number) => {
+    if (newPage < 1 || newPage > totalPages) return;
     setParams({ page: newPage });
   };
 
   const handleSelectRow = (id: number, checked: boolean) => {
-    setSelectedIds(prev =>
-      checked ? [...prev, id] : prev.filter(selectedId => selectedId !== id)
+    setSelectedIds((prev) =>
+      checked ? [...prev, id] : prev.filter((selectedId) => selectedId !== id),
     );
   };
 
   const handleSelectAll = (checked: boolean) => {
     if (checked) {
-      setSelectedIds(sortedProducts.map(p => p.id));
+      setSelectedIds(sortedProducts.map((p) => p.id));
     } else {
       setSelectedIds([]);
     }
@@ -92,7 +100,10 @@ export const ProductsPageContent = () => {
         />
       </div>
 
-      <AddProductForm open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen} />
+      <AddProductForm
+        open={isAddDialogOpen}
+        onOpenChange={setIsAddDialogOpen}
+      />
     </div>
   );
 };

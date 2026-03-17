@@ -12,6 +12,7 @@ export const useProductParams = () => {
 
   const setParams = (updates: Record<string, string | number | undefined>) => {
     const newParams = new URLSearchParams(searchParams);
+
     Object.entries(updates).forEach(([key, value]) => {
       if (value === undefined || value === "") {
         newParams.delete(key);
@@ -19,6 +20,7 @@ export const useProductParams = () => {
         newParams.set(key, String(value));
       }
     });
+
     setSearchParams(newParams);
   };
 

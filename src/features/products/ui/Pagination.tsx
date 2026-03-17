@@ -1,70 +1,46 @@
-import { Button } from '@/shared/ui/button';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { usePagination } from "@/shared/hooks/usePagination";
+import { Button } from "@/shared/ui/button";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
-interface PaginationProps {
+interface Props {
   currentPage: number;
   totalPages: number;
   onPageChange: (page: number) => void;
 }
 
-export const Pagination = ({ currentPage, totalPages, onPageChange }: PaginationProps) => {
-  const getPageNumbers = () => {
-    const delta = 2;
-    const range: number[] = [];
-    const rangeWithDots: (number | string)[] = [];
-
-    for (let i = 1; i <= totalPages; i++) {
-      if (i === 1 || i === totalPages || (i >= currentPage - delta && i <= currentPage + delta)) {
-        range.push(i);
-      }
-    }
-
-    let l: number | undefined;
-    range.forEach((i) => {
-      if (l) {
-        if (i - l === 2) {
-          rangeWithDots.push(l + 1);
-        } else if (i - l !== 1) {
-          rangeWithDots.push('...');
-        }
-      }
-      rangeWithDots.push(i);
-      l = i;
-    });
-
-    return rangeWithDots;
-  };
-
-  const pages = getPageNumbers();
+export const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
+  const { pages, hasPrev, hasNext } = usePagination({
+    currentPage,
+    totalPages,
+  });
 
   return (
-    <div className="flex items-center gap-1">
+    <div className="flex items-center gap-2">
       <Button
-        variant="outline"
         size="icon"
+        variant="outline"
+        disabled={!hasPrev}
         onClick={() => onPageChange(currentPage - 1)}
-        disabled={currentPage === 1}
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
 
-      {pages.map((page, index) => (
+      {pages().map((page) => (
         <Button
-          key={index}
-          variant={page === currentPage ? 'default' : 'outline'}
+          key={page}
           size="sm"
-          onClick={() => typeof page === 'number' && onPageChange(page)}
-          disabled={page === '...'}
+          variant={page === currentPage ? "default" : "outline"}
+          onClick={() => onPageChange(page)}
         >
           {page}
         </Button>
       ))}
 
       <Button
-        variant="outline"
         size="icon"
+        variant="outline"
+        disabled={!hasNext}
         onClick={() => onPageChange(currentPage + 1)}
-        disabled={currentPage === totalPages}
       >
         <ChevronRight className="h-4 w-4" />
       </Button>

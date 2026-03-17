@@ -1,19 +1,18 @@
-import { Input } from '@/shared/ui/input';
-import { useProductParams } from '@/shared/hooks/useProductParams';
-import { useState, useEffect } from 'react';
+import { Input } from "@/shared/ui/input";
+import { useProductParams } from "@/shared/hooks/useProductParams";
+import { useState, useEffect } from "react";
+import { useDebounce } from "@/shared/hooks/useDebounce";
 
 export const ProductSearch = () => {
   const { search, setParams } = useProductParams();
   const [localSearch, setLocalSearch] = useState(search);
+  const debouncedSearch = useDebounce(localSearch, 400);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      if (localSearch !== search) {
-        setParams({ search: localSearch, page: 1 });
-      }
-    }, 500);
-    return () => clearTimeout(timer);
-  }, [localSearch, setParams, search]);
+    if (debouncedSearch !== search) {
+      setParams({ search: debouncedSearch, page: 1 });
+    }
+  }, [debouncedSearch, setParams, search]);
 
   return (
     <Input
