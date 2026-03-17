@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
-import { useAppDispatch } from '../../shared/store/hooks';
-import { setToken } from '@/features/auth/model/authSlice';
+import { useAppDispatch } from '../../entities/store/hooks';
+import { setToken } from '@/entities/auth/authSlice';
 
 export const SessionRestore = ({ children }: { children: React.ReactNode }) => {
   const dispatch = useAppDispatch();

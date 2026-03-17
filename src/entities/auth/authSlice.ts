@@ -1,4 +1,4 @@
-import type { RootState } from '@/shared/store';
+import type { RootState } from '@/entities/store';
 import { createSlice, type PayloadAction } from '@reduxjs/toolkit';
 
 interface AuthState {

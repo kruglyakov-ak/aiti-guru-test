@@ -1,3 +1,5 @@
+import { ProductsPageContent } from '@/features/products/ui/ProductsPageContent';
+
 export const ProductsPage = () => {
-  return <div className="flex items-center justify-center min-h-screen"></div>;
+  return <ProductsPageContent />;
 };
