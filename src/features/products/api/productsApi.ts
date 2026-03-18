@@ -23,6 +23,7 @@ export const productsApi = baseApi.injectEndpoints({
 
         return `products?limit=${limit}&skip=${skip}`;
       },
+      keepUnusedDataFor: 60,
     }),
   }),
 });

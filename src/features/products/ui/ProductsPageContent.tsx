@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useGetProductsQuery } from "../api/productsApi";
+import { productsApi, useGetProductsQuery } from "../api/productsApi";
 import { useProductParams } from "@/shared/hooks/useProductParams";
 import { sortProducts } from "../lib/sorting";
 import { ProductsTable } from "./ProductsTable";
@@ -13,6 +13,7 @@ import type { SortField } from "@/shared/types/product";
 export const ProductsPageContent = () => {
   const { search, page, limit, sortBy, sortDir, setParams } =
     useProductParams();
+  const prefetchProducts = productsApi.usePrefetch("getProducts");
   const { data, isLoading, error, refetch } = useGetProductsQuery({
     search,
     page,
@@ -34,6 +35,12 @@ export const ProductsPageContent = () => {
       setParams({ page: totalPages });
     }
   }, [page, setParams, totalPages]);
+
+  useEffect(() => {
+    if (page < totalPages) {
+      prefetchProducts({ search, page: page + 1, limit }, { force: false });
+    }
+  }, [page, search, limit, totalPages, prefetchProducts]);
 
   const handleSort = (field: SortField) => {
     if (sortBy === field) {
