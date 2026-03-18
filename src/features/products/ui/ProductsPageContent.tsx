@@ -73,9 +73,18 @@ export const ProductsPageContent = () => {
   if (error) return <div className="p-4 text-red-500">Ошибка загрузки</div>;
 
   return (
-    <div className="container mx-auto p-4 space-y-4">
-      <div className="flex justify-between items-center">
+    <div className="min-h-screen pt-5 bg-[#F6F6F6]">
+      <div className="bg-white  px-8 flex items-center justify-center h-26.25 relative">
+        <h1 className="text-[24px] font-bold text-[#202020] leading-none justify-self-start absolute left-7.5">
+          Товары
+        </h1>
         <ProductSearch />
+      </div>
+
+      <div>
+        <h2 className="text-[18px] font-bold text-[#202020]">
+          Все позиции
+        </h2>
         <div className="flex gap-2">
           <Button variant="outline" size="icon" onClick={() => refetch()}>
             <RefreshCw className="h-4 w-4" />
@@ -84,17 +93,16 @@ export const ProductsPageContent = () => {
             <Plus className="h-4 w-4 mr-2" /> Добавить
           </Button>
         </div>
+        <ProductsTable
+          products={sortedProducts}
+          sortBy={sortBy}
+          sortDir={sortDir}
+          onSort={handleSort}
+          selectedIds={selectedIds}
+          onSelectRow={handleSelectRow}
+          onSelectAll={handleSelectAll}
+        />
       </div>
-
-      <ProductsTable
-        products={sortedProducts}
-        sortBy={sortBy}
-        sortDir={sortDir}
-        onSort={handleSort}
-        selectedIds={selectedIds}
-        onSelectRow={handleSelectRow}
-        onSelectAll={handleSelectAll}
-      />
 
       <div className="flex justify-between items-center">
         <div className="text-sm text-gray-600">

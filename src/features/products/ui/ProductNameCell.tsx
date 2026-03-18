@@ -14,9 +14,9 @@ export const ProductNameCell = ({ product }: ProductNameCellProps) => {
         loading="lazy"
         decoding="async"
       />
-      <div>
-        <div className="font-medium">{product.title}</div>
-        <div className="text-sm text-gray-500">
+      <div className="min-w-0">
+        <div className="text-[#202020] text-sm font-medium truncate max-w-55">{product.title}</div>
+        <div className="text-[#999] text-xs mt-0.5">
           {product.category || "Без категории"}
         </div>
       </div>
