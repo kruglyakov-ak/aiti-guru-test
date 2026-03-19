@@ -16,7 +16,7 @@ export default defineConfig({
     tailwindcss(),
     svgr(),
   ],
-
+ base: "/aiti-guru-test/",
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
