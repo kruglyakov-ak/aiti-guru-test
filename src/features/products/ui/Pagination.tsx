@@ -8,19 +8,24 @@ interface Props {
   onPageChange: (page: number) => void;
 }
 
-export const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => {
+export const Pagination = ({
+  currentPage,
+  totalPages,
+  onPageChange,
+}: Props) => {
   const { pages, hasPrev, hasNext } = usePagination({
     currentPage,
     totalPages,
   });
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-1">
       <Button
         size="icon"
         variant="outline"
         disabled={!hasPrev}
         onClick={() => onPageChange(currentPage - 1)}
+        className="w-8 h-8 rounded-lg flex items-center justify-center text-[#999] hover:bg-[#F3F3F3] disabled:opacity-40 transition-colors"
       >
         <ChevronLeft className="h-4 w-4" />
       </Button>
@@ -31,6 +36,11 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => 
           size="sm"
           variant={page === currentPage ? "default" : "outline"}
           onClick={() => onPageChange(page)}
+          className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm font-medium transition-colors ${
+            currentPage === page
+              ? "bg-[#3B4FF5] text-white"
+              : "text-[#999] hover:bg-[#F3F3F3]"
+          }`}
         >
           {page}
         </Button>
@@ -41,6 +51,7 @@ export const Pagination = ({ currentPage, totalPages, onPageChange }: Props) => 
         variant="outline"
         disabled={!hasNext}
         onClick={() => onPageChange(currentPage + 1)}
+        className="w-8 h-8 rounded-lg flex items-center justify-center text-[#999] hover:bg-[#F3F3F3] disabled:opacity-40 transition-colors"
       >
         <ChevronRight className="h-4 w-4" />
       </Button>

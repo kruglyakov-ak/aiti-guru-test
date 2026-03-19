@@ -1,76 +1,29 @@
-import { useEffect, useState } from "react";
-import { productsApi, useGetProductsQuery } from "../api/productsApi";
-import { useProductParams } from "@/shared/hooks/useProductParams";
-import { sortProducts } from "../lib/sorting";
+import { useState } from "react";
 import { ProductsTable } from "./ProductsTable";
 import { ProductSearch } from "./ProductSearch";
 import { Pagination } from "./Pagination";
 import { AddProductForm } from "./AddProductForm";
 import { Button } from "@/shared/ui/button";
 import { RefreshCw, Plus } from "lucide-react";
-import type { SortField } from "@/shared/types/product";
+import { useProductSelection } from "@/shared/hooks/useProductSelection";
+import { useProducts } from "@/shared/hooks/useProducts";
 
 export const ProductsPageContent = () => {
-  const { search, page, limit, sortBy, sortDir, setParams } =
-    useProductParams();
-  const prefetchProducts = productsApi.usePrefetch("getProducts");
-  const { data, isLoading, error, refetch } = useGetProductsQuery({
-    search,
-    page,
-    limit,
-  });
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
-  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const {
+    products,
+    handlePageChange,
+    handleSort,
+    isLoading,
+    refetch,
+    params,
+    totalPages,
+    end,
+    start,
+    total,
+  } = useProducts();
 
-  const products = data?.products ?? [];
-  const sortedProducts = sortProducts(products, sortBy, sortDir);
-
-  const total = data?.total ?? 0;
-  const totalPages = Math.ceil(total / limit) || 1;
-  const start = total === 0 ? 0 : (page - 1) * limit + 1;
-  const end = Math.min(page * limit, total);
-
-  useEffect(() => {
-    if (page > totalPages && totalPages > 0) {
-      setParams({ page: totalPages });
-    }
-  }, [page, setParams, totalPages]);
-
-  useEffect(() => {
-    if (page < totalPages) {
-      prefetchProducts({ search, page: page + 1, limit }, { force: false });
-    }
-  }, [page, search, limit, totalPages, prefetchProducts]);
-
-  const handleSort = (field: SortField) => {
-    if (sortBy === field) {
-      setParams({ sortDir: sortDir === "asc" ? "desc" : "asc" });
-    } else {
-      setParams({ sortBy: field, sortDir: "asc" });
-    }
-  };
-
-  const handlePageChange = (newPage: number) => {
-    if (newPage < 1 || newPage > totalPages) return;
-    setParams({ page: newPage });
-  };
-
-  const handleSelectRow = (id: number, checked: boolean) => {
-    setSelectedIds((prev) =>
-      checked ? [...prev, id] : prev.filter((selectedId) => selectedId !== id),
-    );
-  };
-
-  const handleSelectAll = (checked: boolean) => {
-    if (checked) {
-      setSelectedIds(sortedProducts.map((p) => p.id));
-    } else {
-      setSelectedIds([]);
-    }
-  };
-
-  if (isLoading) return <div className="p-4">Загрузка...</div>;
-  if (error) return <div className="p-4 text-red-500">Ошибка загрузки</div>;
+  const { selectedIds, toggle, toggleAll } = useProductSelection(products);
 
   return (
     <div className="min-h-screen pt-5 bg-[#F6F6F6]">
@@ -78,41 +31,70 @@ export const ProductsPageContent = () => {
         <h1 className="text-[24px] font-bold text-[#202020] leading-none justify-self-start absolute left-7.5">
           Товары
         </h1>
-        <ProductSearch />
+        <ProductSearch isLoading={isLoading} />
       </div>
 
-      <div>
-        <h2 className="text-[18px] font-bold text-[#202020]">
-          Все позиции
-        </h2>
-        <div className="flex gap-2">
-          <Button variant="outline" size="icon" onClick={() => refetch()}>
-            <RefreshCw className="h-4 w-4" />
-          </Button>
-          <Button onClick={() => setIsAddDialogOpen(true)}>
-            <Plus className="h-4 w-4 mr-2" /> Добавить
-          </Button>
-        </div>
-        <ProductsTable
-          products={sortedProducts}
-          sortBy={sortBy}
-          sortDir={sortDir}
-          onSort={handleSort}
-          selectedIds={selectedIds}
-          onSelectRow={handleSelectRow}
-          onSelectAll={handleSelectAll}
-        />
-      </div>
+      <div className="bg-white px-7.5 mt-7.5 mb-5">
+        <div
+          className="overflow-hidden  flex flex-col"
+          style={{ height: "calc(100vh - 230px)" }}
+        >
+          <div className="flex items-center justify-between px-6 py-5 shrink-0">
+            <h2 className="text-[18px] font-bold text-[#202020]">
+              {isLoading ? (
+                <span className="flex gap-1 items-center">
+                  {" "}
+                  <span>Загрузка данных ... </span> <Spinner />
+                </span>
+              ) : (
+                "Все позиции"
+              )}
+            </h2>
+            <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3">
+                <Button
+                  variant="outline"
+                  onClick={() => refetch()}
+                  className="w-9 rounded-sm border border-[#B2B3B9] hover:border-[#BCBCBC] bg-white flex items-center justify-center transition-colors h-10.5"
+                >
+                  <RefreshCw className="h-4 w-4" />
+                </Button>
+                <Button
+                  onClick={() => setIsAddDialogOpen(true)}
+                  className="flex items-center gap-2 bg-[#3B4FF5] hover:bg-[#2D3FE0] text-white text-sm font-semibold rounded-sm px-5 py-2.5 transition-colors h-10.5"
+                >
+                  <Plus className="h-4 w-4 mr-2" /> Добавить
+                </Button>
+              </div>
+            </div>
+          </div>
 
-      <div className="flex justify-between items-center">
-        <div className="text-sm text-gray-600">
-          Показано {start}–{end} из {total}
+          <div className="flex-1 overflow-auto">
+            <ProductsTable
+              products={products}
+              isLoading={isLoading}
+              sortBy={params.sortBy}
+              sortDir={params.sortDir}
+              onSort={handleSort}
+              selectedIds={selectedIds}
+              onSelectRow={toggle}
+              onSelectAll={toggleAll}
+            />
+          </div>
         </div>
-        <Pagination
-          currentPage={page}
-          totalPages={totalPages}
-          onPageChange={handlePageChange}
-        />
+
+        {!isLoading && total > 20 && (
+          <div className="flex items-center justify-between px-6 py-5 border-t border-[#F0F0F0]">
+            <div className="text-sm text-[#999]">
+              Показано {start}–{end} из {total}
+            </div>
+            <Pagination
+              currentPage={params.page}
+              totalPages={totalPages}
+              onPageChange={handlePageChange}
+            />
+          </div>
+        )}
       </div>
 
       <AddProductForm
