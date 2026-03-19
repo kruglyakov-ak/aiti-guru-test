@@ -7,6 +7,7 @@ import { Button } from "@/shared/ui/button";
 import { RefreshCw, Plus } from "lucide-react";
 import { useProductSelection } from "@/shared/hooks/useProductSelection";
 import { useProducts } from "@/shared/hooks/useProducts";
+import { Spinner } from "@/shared/ui/spinner";
 
 export const ProductsPageContent = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
